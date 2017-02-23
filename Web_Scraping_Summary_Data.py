@@ -3,7 +3,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 import datetime
-from pandas import DataFrame
+import pandas as pd
 
 
 def get_summary_data():
@@ -74,8 +74,9 @@ def get_summary_data():
     return SUMMARY_DATA
 
 summary_data = get_summary_data()
-captial_weights_data = summary_data['assets_under_management_B']
-
+capital_data = summary_data['assets_under_management_B']
+weight = pd.dataframe(capital_data / sum(capital_data).todataframe)
+weight.to_csv(r"C:\My Files\Study\17 Spring\800 - Special Problems in FE (MS)\Code\FE-800\csv\weight.csv")
 if __name__ == "__main__":
 
     print(summary_data)

@@ -42,12 +42,15 @@ def LoadETFs():
     db.histricaldata.delete_many({})
     
     apiCall = 1
-    for k in ETFs.keys():
+    for k in ETFs.keys(): # dictionary
         print(ETFs[k])
-        if apiCall%20 == 0:
+
+        if apiCall % 20 == 0:
             print("Sleeping for 10 min every 20 calls")
             time.sleep(11*60) #sleep 10 min if 20 calls have been made
+
         # qd.ApiConfig.api_key = 'e9mjr1zRrH1o_5zBfEEy'
+
         apiCall = apiCall+1
         print(k + " is start!")
         ETFs_data = None
