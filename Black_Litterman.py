@@ -1,26 +1,38 @@
 import numpy as np
 import pandas as pd
+from data import *
+
+# def get_stock_return(stock_price: pd.DataFrame, if_print=False):
+#     # stock_return = (stock_price - stock_price.appendleft(0)) / stock_price
+#     # self.stock_return = self.stock_return - benchmark
+#     stock_return = stock_price.shift(1) / stock_price - 1
+#     stock_return = stock_return.dropna()
+#     if if_print:
+#         print("Return Matrix is \n", stock_return)
+#     return stock_return
 
 
-def get_stock_return(stock_price: pd.DataFrame, if_print=False):
-    # stock_return = (stock_price - stock_price.appendleft(0)) / stock_price
-    # self.stock_return = self.stock_return - benchmark
-    stock_return = stock_price.shift(1) / stock_price - 1
-    stock_return = stock_return.dropna()
-    if if_print:
-        print("Return Matrix is \n", stock_return)
-    return stock_return
+# def get_equal_weighted_return(stock_price_matrix: pd.DataFrame):
+#     equal_weighted_return = stock_price_matrix.stack().mean()
+#     return equal_weighted_return
+
+
+# def get_equal_weighted_std(stock_price_matrix: pd.DataFrame):
+#     equal_weighted_std = np.std(stock_price_matrix.mean())
+#     print(equal_weighted_std)
+#     return equal_weighted_std
+
 
 class BlackLitterman:
-    def __init__(self, data, views, riskaversion):
+    def __init__(self, Data, views):
         # original data
-        self.stock_price = data
-        self.num = len(data.columns)  # number of stocks
-        self.stock_return = self.stock_price.apply(get_stock_return)
+        self.stock_price = Data.get_stock_price()
+        self.num = len(Data.price)  # number of stocks
+        self.stock_return = Data.returns
         self.covariance_matrix = None
 
         # input for the Implied Excess Equilibrium Return
-        self.risk_aversion = riskaversion
+        self.risk_aversion = Data.get_risk_aversion()
         self.capital_weights = pd.read_csv(r"C:\My Files\Study\17 Spring\800 - Special Problems in FE (MS)\Code\FE-800\csv\weight.csv",index_col=0,header=None)
         # self.covariance_matrix_excess = None
         self.equilibrium_expected_return = None
@@ -42,7 +54,7 @@ class BlackLitterman:
     #         print("Return Matrix is \n", stock_return)
 
     def get_covariance_matrix(self, if_print = False):
-        get_stock_return(self.stock_price)
+        # self.stock_return = get_stock_return(self.stock_price)
         self.covariance_matrix = np.cov(self.stock_return, rowvar=False)
 
         if if_print:
@@ -53,9 +65,6 @@ class BlackLitterman:
         self.equilibrium_expected_return = self.risk_aversion * np.dot(self.covariance_matrix, self.capital_weights)
         if if_print:
             print("Equilibrium Expected Return is \n", self.equilibrium_expected_return)
-
-    def set_risk_aversion(self, risk_aversion):
-        self.risk_aversion = risk_aversion
 
     def get_combined_return(self):
         # tau: a scalar
@@ -85,7 +94,7 @@ class BlackLitterman:
         self.combined_covariance_matrix = self.covariance_matrix + np.linalg.inv(tau_Sigma_inv + P_Omega_inv_P)
 
     def mean_variance_optimization(self, expected_return, covariance_matrix):
-        mu = np.matrix(expected_return).transpose()
+        mu = np.matrix(expected_return)#.transpose()
         Q = np.matrix(covariance_matrix)
         l = np.matrix(np.repeat([1], self.num))
         c = np.matrix([1])
@@ -108,16 +117,10 @@ class BlackLitterman:
     def run(self):
         self.get_combined_return()
         self.mean_variance_optimization(self.combined_return,self.combined_covariance_matrix)
-        # self.mean_variance_optimization(np.mean(get_stock_return(self.stock_price)), self.covariance_matrix)
+        self.mean_variance_optimization(np.mean(self.stock_return), self.covariance_matrix)
 
 
 def main():
-    # data =
-    # views =
-    # blacklitterman_test = BlackLitterman(data, views)
-    # blacklitterman_test.run()
-    # print(blacklitterman_test.weights)
-    # del blacklitterman_test
     pass
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 class Portfolio:
-    def __init__(self, BlackLitterman):
-        self.weights = BlackLitterman.weights
+    def __init__(self, tickers: list):
+        self.tickers = tickers
+        self.Data =
 
 
 def main():

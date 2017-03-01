@@ -1,7 +1,13 @@
 import numpy as np
 
+
 class PortfolioOptimization:
-    def mean_variance_optimization(self, BlackLitterman):
+    def __int__(self, Data):
+
+
+
+
+    def mean_variance_optimization(self, BlackLitterman, constraint):
         mu = np.matrix(BlackLitterman.combined_return)
         Q = np.matrix(BlackLitterman.combined_covariance_matrix)
         l = np.matrix(np.repeat([1], self.num))

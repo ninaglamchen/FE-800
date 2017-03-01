@@ -28,7 +28,8 @@ def main():
     result.insert(len(result.columns),"equilibrium expected return", blacklitterman_test.equilibrium_expected_return)
     result.insert(len(result.columns),"weights", blacklitterman_test.weights)
     print(result)
-    result.to_csv("result_2.csv")
+
+    # result.to_csv("result_.csv")
 
 if __name__ == "__main__":
     main()
